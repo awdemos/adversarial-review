@@ -31,7 +31,7 @@
     --border-soft: #1c1c26;
     --text:        #eceaf0;
     --muted:       #a2a1ad;
-    --faint:       #6f6e7c;
+    --faint:       #8b8896;
     --accent:      #ff5c38;
     --accent-soft: #ff7a5c;
     --accent-dim:  rgba(255, 92, 56, .12);
@@ -60,7 +60,37 @@
     --measure: 72ch;
   }
 
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    scrollbar-color: var(--border) var(--bg);
+  }
+  ::-webkit-scrollbar { inline-size: 10px; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; border: 2px solid var(--bg); }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+
+  ::selection { background: var(--accent); color: #14060a; }
+
+  /* keep anchor targets clear of the sticky top bar */
+  :where(section[id], main[id]) { scroll-margin-top: 4.5rem; }
+
+  /* skip link: visually hidden until focused */
+  .skip {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-start: var(--space-4);
+    z-index: 20;
+    padding: .55rem 1rem;
+    background: var(--accent);
+    color: #14060a;
+    font-weight: 600;
+    font-size: .9rem;
+    text-decoration: none;
+    border-end-start-radius: var(--radius-m);
+    border-end-end-radius: var(--radius-m);
+    transform: translateY(-100%);
+    transition: transform .15s ease;
+  }
+  .skip:focus-visible { transform: translateY(0); outline: none; }
 
   body {
     margin: 0;
@@ -99,6 +129,23 @@
     transition: color .15s ease, text-decoration-color .15s ease;
   }
   :where(a:hover) { color: var(--accent-soft); text-decoration-color: var(--accent); }
+
+  /* animated underline slide for inline text links;
+     faint full-length underline at rest, accent grows over it on hover */
+  :where(.prose, .terminal-note, .footer, .eyebrow, .steps li) a {
+    text-decoration: none;
+    background-image:
+      linear-gradient(to right, var(--accent-soft), var(--accent-soft)),
+      linear-gradient(to right, rgba(255, 122, 92, .5), rgba(255, 122, 92, .5));
+    background-repeat: no-repeat, no-repeat;
+    background-position: 0 100%, 0 100%;
+    background-size: 0% 1px, 100% 1px;
+    transition: color .15s ease, background-size .2s ease;
+  }
+  :where(.prose, .terminal-note, .footer, .eyebrow, .steps li) a:hover {
+    color: var(--accent-soft);
+    background-size: 100% 1px, 100% 1px;
+  }
 
   :where(a:focus-visible) {
     outline: 2px solid var(--accent);
@@ -155,7 +202,8 @@
     color: var(--text);
   }
   .wordmark:hover { color: var(--text); }
-  .wordmark .mark { color: var(--accent); flex: none; }
+  .wordmark .mark { color: var(--accent); flex: none; transition: color .15s ease; }
+  .wordmark:hover .mark { color: var(--accent-soft); }
 
   .nav {
     display: flex;
@@ -167,8 +215,14 @@
   .nav a {
     text-decoration: none;
     color: var(--muted);
+    background-image: linear-gradient(to right, var(--accent-soft), var(--accent-soft));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1px;
+    padding-block-end: 2px;
+    transition: color .15s ease, background-size .2s ease;
   }
-  .nav a:hover { color: var(--text); }
+  .nav a:hover { color: var(--text); background-size: 100% 1px; }
 
   .nav .nav-cta {
     display: inline-flex;
@@ -222,7 +276,7 @@
     line-height: 1.05;
     margin-block-end: var(--space-5);
   }
-  .hero h1 .accent { color: var(--accent); }
+  .hero h1 .accent { color: var(--accent); text-shadow: 0 0 2.75rem rgba(255, 92, 56, .4); }
 
   .pitch {
     font-size: clamp(1.25rem, 1rem + 1.5vw, 1.8rem);
@@ -256,6 +310,7 @@
     transition: border-color .15s ease, background .15s ease, transform .15s ease;
   }
   .btn:hover { border-color: var(--accent); background: var(--accent-dim); color: var(--text); }
+  .btn:active { transform: translateY(1px); }
   .btn-primary {
     background: var(--accent);
     border-color: var(--accent);
@@ -290,17 +345,24 @@
     font-size: .78rem;
     color: var(--faint);
   }
+  .terminal-bar .hint {
+    margin-inline-start: auto;
+    font-family: var(--font-mono);
+    font-size: .72rem;
+    color: var(--faint);
+    user-select: none;
+  }
 
   .terminal pre {
     margin: 0;
     padding: var(--space-5);
-    overflow-x: auto;
     font-size: clamp(.82rem, .78rem + .3vw, .95rem);
     line-height: 1.7;
     background: transparent;
     border: 0;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
+    cursor: copy;
   }
   .terminal pre code {
     display: block;
@@ -308,6 +370,8 @@
     background: none;
     border: 0;
     color: var(--text);
+    user-select: all;
+    -webkit-user-select: all;
   }
   .terminal .prompt { color: var(--accent); user-select: none; }
   .terminal .comment { color: var(--faint); }
@@ -416,6 +480,23 @@
     white-space: nowrap;
   }
 
+  /* version badge — accent chip used in section heads */
+  .badge {
+    display: inline-block;
+    vertical-align: .18em;
+    margin-inline-start: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    padding: .22rem .6rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 92, 56, .45);
+    background: var(--accent-dim);
+    color: var(--accent-soft);
+    white-space: nowrap;
+  }
+
   /* why not just prompt — argument cards */
 
   .args {
@@ -432,7 +513,9 @@
     border: 1px solid var(--border-soft);
     border-radius: var(--radius-l);
     background: var(--surface);
+    transition: border-color .2s ease;
   }
+  .args li:hover { border-color: var(--border); }
 
   .args .icon {
     display: grid;
@@ -518,18 +601,24 @@
     .hero, .section { padding-inline: var(--space-4); }
     .actions { flex-direction: column; align-items: stretch; }
     .btn { justify-content: center; }
-    .terminal-bar .title { display: none; }
+    .terminal-bar .title, .terminal-bar .hint { display: none; }
     .links a { flex-direction: column; gap: var(--space-1); }
     .links .hint { text-align: start; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    :where(a, .btn, .steps li)::after, * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    *, *::before, *::after {
+      transition-duration: .01ms !important;
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+    }
   }
 </style>
 </head>
 <body>
+
+<a class="skip" href="#top">Skip to content</a>
 
 <header class="topbar">
   <div class="topbar-inner">
@@ -579,6 +668,7 @@
       <div class="terminal-bar" aria-hidden="true">
         <span class="dot"></span><span class="dot"></span><span class="dot"></span>
         <span class="title">quickstart — copy, customize, commit</span>
+        <span class="hint">click command to select all</span>
       </div>
       <pre><code><span class="prompt">$</span> curl -O <span class="url">https://raw.githubusercontent.com/awdemos/adversarial-review/v1.0.1/ADVERSARIAL_REVIEW.md</span>
 <span class="comment"># read it, edit the "Repo-specific rules" section, commit</span></code></pre>
@@ -720,7 +810,7 @@
   <section class="section" id="status">
     <div class="section-head">
       <span class="kicker">Status</span>
-      <h2>Stable under semantic versioning</h2>
+      <h2>Stable under semantic versioning <span class="badge">v1.0.1</span></h2>
     </div>
 
     <p class="prose">v1.0.1 — the protocol (lenses, severity taxonomy, evidence rule, output
