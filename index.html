@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ADVERSARIAL_REVIEW.md — a standard for agent-driven adversarial code review</title>
+<meta name="description" content="ADVERSARIAL_REVIEW.md is a repo-declared standard, in the spirit of AGENTS.md and CLAUDE.md, that tells coding agents how to perform rigorous, evidence-backed adversarial reviews of a codebase.">
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; font: 16px/1.6 system-ui, sans-serif; background: #0d1117; color: #e6edf3; }
+  main { max-width: 860px; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
+  h1 { font-size: 2rem; }
+  h2 { margin-top: 3rem; border-bottom: 1px solid #30363d; padding-bottom: .4rem; }
+  code, pre { background: #161b22; border-radius: 6px; }
+  code { padding: .15em .4em; }
+  pre { padding: 1rem; overflow-x: auto; }
+  a { color: #58a6ff; }
+  .tag { color: #8b949e; }
+  .file { font-family: ui-monospace, monospace; color: #79c0ff; }
+  ol li, ul li { margin: .5rem 0; }
+</style>
+</head>
+<body>
+<main>
+  <p class="tag">A repo-level standard, in the spirit of <code>AGENTS.md</code> and <code>CLAUDE.md</code></p>
+  <h1><span class="file">ADVERSARIAL_REVIEW.md</span></h1>
+
+  <p>Green CI, listening ports, and passing tests are not proof that code is
+  right — they are proof that the code did what its author imagined. AI coding
+  agents make this sharper: they produce plausible, polished output at a pace
+  no human reviewer matches. We need a declared, portable convention for the
+  other half of the loop: <strong>systematic adversarial review, performed by
+  agents, against rules the repo itself defines.</strong></p>
+
+  <h2>The idea</h2>
+  <ol>
+    <li>Drop an <span class="file">ADVERSARIAL_REVIEW.md</span> in your repo root.</li>
+    <li>It tells any coding agent: your work here is expected to survive
+      adversarial review — and here is how that review is done in this repo.</li>
+    <li>The agent reviews as an adversary, pass by pass, one lens at a time
+      (security, correctness, spec-compliance, performance, abuse, operational),
+      with evidence required for every claim and an explicit per-lens verdict.</li>
+    <li>You customize the repo-specific section; the protocol stays portable.</li>
+  </ol>
+
+  <h2>Quickstart</h2>
+  <pre>curl -O https://adversarial-review.com/ADVERSARIAL_REVIEW.md
+# read it, edit the "Repo-specific rules" section, commit</pre>
+
+  <h2>Why not just prompt for it?</h2>
+  <ul>
+    <li><strong>Persistence.</strong> A prompt is forgotten; a file in the repo
+      binds every future session, human or agent.</li>
+    <li><strong>Portability.</strong> Any agent that reads the repo conventions
+      (the way <code>AGENTS.md</code> already works) picks it up with zero
+      integration.</li>
+    <li><strong>Accountability.</strong> The standard demands evidence-backed,
+      severity-rated findings and explicit "checked and clean" verdicts — the
+      difference between a review and a vibe check.</li>
+    <li><strong>Ownability.</strong> The repo declares its own invariants,
+      known weak spots, and required checks. Generic review becomes
+      <em>this</em> codebase's review.</li>
+  </ul>
+
+  <h2>The standard</h2>
+  <p>The canonical template is here, versioned, in this repo:</p>
+  <ul>
+    <li><a href="./ADVERSARIAL_REVIEW.md"><span class="file">ADVERSARIAL_REVIEW.md</span></a> — the file you copy into your repo.</li>
+  </ul>
+
+  <h2>Status</h2>
+  <p>v1.0.0 — first public draft. The protocol (lenses, severity taxonomy,
+  evidence rule, output format) is intended to be stable; the template's
+  repo-specific section is yours to change. Feedback and PRs welcome.</p>
+</main>
+</body>
+</html>
