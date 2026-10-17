@@ -2,6 +2,9 @@
 
 Version 1.0.1 · Canonical source: https://github.com/awdemos/adversarial-review
 · Site: https://adversarial-review.com
+· License: MIT (https://github.com/awdemos/adversarial-review/blob/main/LICENSE) —
+  copy this file into your repo, modify it, and ship it under your own terms;
+  the MIT license applies to the template text.
 
 ## What this file is
 
