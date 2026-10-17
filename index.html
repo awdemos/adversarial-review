@@ -36,22 +36,27 @@
 </head>
 <body>
 <main>
-  <p class="tag">A repo-level standard, in the spirit of <a href="https://agents.md">agents.md</a> and Anthropic's <code>CLAUDE.md</code></p>
+  <p class="tag">An open standard proposal — community-governed and MIT licensed, in the spirit of <a href="https://agents.md">agents.md</a> and Anthropic's <code>CLAUDE.md</code></p>
   <h1><span class="file">ADVERSARIAL_REVIEW.md</span></h1>
 
-  <p><code>AGENTS.md</code> gave every repo a way to tell agents <em>how to
-  work</em>. <span class="file">ADVERSARIAL_REVIEW.md</span> tells them how
-  to <em>doubt</em>.</p>
+  <p><code>AGENTS.md</code> gave every repository a shared way to tell agents
+  <em>how to work</em>. <span class="file">ADVERSARIAL_REVIEW.md</span> is the
+  open counterpart: a shared way to tell them <em>how to doubt</em>.</p>
 
-  <p>Green CI and passing tests prove the code does what its author imagined
-  testing — nothing more. AI coding agents make that gap dangerous: they
-  ship plausible, polished code faster than any human can review it.</p>
+  <p>It is one file at the repo root that declares how adversarial review is
+  done in that repository — which lenses, what counts as evidence, how
+  severities are assigned — so any agent that reads it stops rubber-stamping
+  its own output. Green CI proves the code does what its author imagined
+  testing; this standard exists because agents now write code faster than
+  humans can review it, and review has to be declared, evidence-backed, and
+  machine-readable to keep up.</p>
 
-  <p><span class="file">ADVERSARIAL_REVIEW.md</span> is one file in your
-  repo root that declares how adversarial review is done here — which
-  lenses, what counts as evidence, how severities are assigned — so any
-  agent that reads it stops rubber-stamping its own output. One file
-  upgrades a code generator into a skeptical reviewer.</p>
+  <p>The standard is versioned, MIT licensed, and governed in the open.
+  Changes go through a public process — issues before pull requests,
+  cryptographically verified commits, recorded signoff on every merge — and
+  anyone may participate. No vendor controls it, and no adopter must accept
+  it unchanged: take the protocol, customize the repo-specific section, and
+  propose improvements back to the community.</p>
 
   <h2>The idea</h2>
   <ol>
