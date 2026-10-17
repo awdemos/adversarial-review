@@ -39,17 +39,19 @@
   <p class="tag">A repo-level standard, in the spirit of <a href="https://agents.md">agents.md</a> and Anthropic's <code>CLAUDE.md</code></p>
   <h1><span class="file">ADVERSARIAL_REVIEW.md</span></h1>
 
-  <p>Green CI, listening ports, and passing tests are not proof that code is
-  right — at most they show the code did what its author imagined testing.
-  AI coding agents make the gap sharper: they produce plausible, polished
-  output at a pace no human reviewer matches. Just as <code>AGENTS.md</code>
-  gave the industry a shared file format for telling agents <em>how to
-  work</em> in a repo, this site proposes a companion standard that tells
-  agents <em>how to review</em>: <strong>ADVERSARIAL_REVIEW.md — a common
-  format for adversarial review, so any agent in any repo can perform deep,
-  evidence-backed, adversarial review against rules the repo itself
-  declares.</strong> One file, dropped in a repo root, upgrades every agent
-  that reads it from code generator to skeptical reviewer.</p>
+  <p><code>AGENTS.md</code> gave every repo a way to tell agents <em>how to
+  work</em>. <span class="file">ADVERSARIAL_REVIEW.md</span> tells them how
+  to <em>doubt</em>.</p>
+
+  <p>Green CI and passing tests prove the code does what its author imagined
+  testing — nothing more. AI coding agents make that gap dangerous: they
+  ship plausible, polished code faster than any human can review it.</p>
+
+  <p><span class="file">ADVERSARIAL_REVIEW.md</span> is one file in your
+  repo root that declares how adversarial review is done here — which
+  lenses, what counts as evidence, how severities are assigned — so any
+  agent that reads it stops rubber-stamping its own output. One file
+  upgrades a code generator into a skeptical reviewer.</p>
 
   <h2>The idea</h2>
   <ol>

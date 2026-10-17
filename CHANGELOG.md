@@ -6,6 +6,9 @@ and the repo-specific worked example may tighten in patch releases.
 
 ## [Unreleased]
 
+- Site: rewrite landing-page intro — lead with the AGENTS.md analogy,
+  tighten the CI-skepticism paragraph, keep the one-file punchline.
+
 - Site: add Open Graph image and Twitter Card meta (`twitter:card`,
   `og:image`) so shared links unfurl with a preview card.
 
