@@ -4,6 +4,11 @@ Semantic versioning: the protocol (six rules, six core lenses, severity
 taxonomy, output format) is the stable API of this standard; template text
 and the repo-specific worked example may tighten in patch releases.
 
+## [Unreleased]
+
+- Site: add Open Graph image and Twitter Card meta (`twitter:card`,
+  `og:image`) so shared links unfurl with a preview card.
+
 ## [1.0.1] — 2026-10-17
 
 First revision after publication. v1.0.0 was subjected to a 347-agent
