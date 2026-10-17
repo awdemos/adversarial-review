@@ -19,109 +19,729 @@
 <meta property="og:image:alt" content="ADVERSARIAL_REVIEW.md — a standard for agent-driven adversarial code review">
 <meta name="twitter:card" content="summary_large_image">
 <style>
-  :root { color-scheme: dark; }
-  body { margin: 0; font: 16px/1.6 system-ui, sans-serif; background: #0d1117; color: #e6edf3; }
-  main { max-width: 860px; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
-  h1 { font-size: 2rem; }
-  h2 { margin-top: 3rem; border-bottom: 1px solid #30363d; padding-bottom: .4rem; }
-  code, pre { background: #161b22; border-radius: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-  code { padding: .15em .4em; }
-  pre { padding: 1rem; overflow-x: auto; }
-  a { color: #58a6ff; }
-  a:focus-visible { outline: 2px solid #58a6ff; outline-offset: 2px; }
-  .tag { color: #8b949e; }
-  .file { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: #79c0ff; }
-  ol li, ul li { margin: .5rem 0; }
+  :root {
+    color-scheme: dark;
+
+    /* palette */
+    --bg:          #0a0a0d;
+    --bg-soft:     #0e0e13;
+    --surface:     #121218;
+    --surface-2:   #17171f;
+    --border:      #232330;
+    --border-soft: #1c1c26;
+    --text:        #eceaf0;
+    --muted:       #a2a1ad;
+    --faint:       #6f6e7c;
+    --accent:      #ff5c38;
+    --accent-soft: #ff7a5c;
+    --accent-dim:  rgba(255, 92, 56, .12);
+
+    /* type */
+    --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+    /* spacing scale */
+    --space-1: .25rem;
+    --space-2: .5rem;
+    --space-3: .75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 3rem;
+    --space-8: 4.5rem;
+    --space-9: 7rem;
+
+    /* radii */
+    --radius-s: 6px;
+    --radius-m: 10px;
+    --radius-l: 16px;
+
+    --content: 70rem;
+    --measure: 72ch;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, .95rem + .2vw, 1.075rem);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    /* faint blueprint grid + accent glow, pure CSS */
+    background-image:
+      radial-gradient(60rem 32rem at 50% -12rem, rgba(255, 92, 56, .07), transparent 70%),
+      linear-gradient(to right, rgba(255,255,255,.022) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,.022) 1px, transparent 1px);
+    background-size: auto, 4rem 4rem, 4rem 4rem;
+    background-attachment: fixed, fixed, fixed;
+  }
+
+  :where(h1, h2, h3) {
+    margin: 0;
+    font-weight: 650;
+    letter-spacing: -.02em;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  :where(p, li) { text-wrap: pretty; }
+
+  :where(p) { margin: 0 0 var(--space-4); max-width: var(--measure); }
+
+  :where(a) {
+    color: var(--text);
+    text-decoration-color: rgba(255, 92, 56, .55);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color .15s ease, text-decoration-color .15s ease;
+  }
+  :where(a:hover) { color: var(--accent-soft); text-decoration-color: var(--accent); }
+
+  :where(a:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  :where(code, pre) {
+    font-family: var(--font-mono);
+    font-size: .875em;
+  }
+
+  :where(code) {
+    background: var(--surface-2);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-s);
+    padding: .12em .4em;
+  }
+
+  .file { font-family: var(--font-mono); font-size: .92em; color: var(--accent-soft); }
+
+  /* ---------- top bar ---------- */
+
+  .topbar {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 10;
+    background: rgba(10, 10, 13, .78);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-block-end: 1px solid var(--border-soft);
+  }
+
+  .topbar-inner {
+    max-width: var(--content);
+    margin-inline: auto;
+    padding-inline: var(--space-5);
+    block-size: 3.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: .95rem;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .wordmark:hover { color: var(--text); }
+  .wordmark .mark { color: var(--accent); flex: none; }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(var(--space-3), 2vw, var(--space-5));
+    font-size: .9rem;
+  }
+
+  .nav a {
+    text-decoration: none;
+    color: var(--muted);
+  }
+  .nav a:hover { color: var(--text); }
+
+  .nav .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: .4rem .95rem;
+    background: var(--surface);
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .nav .nav-cta:hover { border-color: var(--accent); background: var(--accent-dim); color: var(--text); }
+
+  /* ---------- hero ---------- */
+
+  .hero {
+    max-width: var(--content);
+    margin-inline: auto;
+    padding: clamp(var(--space-7), 8vw, var(--space-9)) var(--space-5) var(--space-8);
+  }
+
+  .eyebrow {
+    display: inline-block;
+    margin: 0 0 var(--space-5);
+    padding: .45rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    font-size: .85rem;
+    color: var(--muted);
+    max-width: var(--measure);
+  }
+  .eyebrow::before {
+    content: "";
+    display: inline-block;
+    inline-size: .45rem;
+    block-size: .45rem;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 .6rem rgba(255, 92, 56, .8);
+    margin-inline-end: var(--space-2);
+    vertical-align: .05em;
+  }
+  .eyebrow a { color: var(--text); }
+
+  .hero h1 {
+    font-family: var(--font-mono);
+    font-size: clamp(2rem, 1.2rem + 3.4vw, 4.25rem);
+    letter-spacing: -.04em;
+    line-height: 1.05;
+    margin-block-end: var(--space-5);
+  }
+  .hero h1 .accent { color: var(--accent); }
+
+  .pitch {
+    font-size: clamp(1.25rem, 1rem + 1.5vw, 1.8rem);
+    line-height: 1.45;
+    font-weight: 450;
+    color: var(--text);
+    max-width: 56ch;
+    margin-block-end: var(--space-6);
+  }
+  .pitch .file { font-size: .92em; }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block: var(--space-6) var(--space-7);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: .65rem 1.25rem;
+    border-radius: var(--radius-m);
+    font-size: .95rem;
+    font-weight: 550;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    color: var(--text);
+    background: var(--surface);
+    transition: border-color .15s ease, background .15s ease, transform .15s ease;
+  }
+  .btn:hover { border-color: var(--accent); background: var(--accent-dim); color: var(--text); }
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #14060a;
+  }
+  .btn-primary:hover { background: var(--accent-soft); border-color: var(--accent-soft); color: #14060a; }
+
+  /* ---------- terminal card ---------- */
+
+  .terminal {
+    max-width: 46rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-l);
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(0,0,0,.4), 0 1.5rem 4rem -2rem rgba(0,0,0,.7);
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: .7rem var(--space-4);
+    border-block-end: 1px solid var(--border-soft);
+    background: rgba(255,255,255,.015);
+  }
+  .terminal-bar .dot { inline-size: .65rem; block-size: .65rem; border-radius: 50%; background: var(--border); }
+  .terminal-bar .dot:first-child { background: rgba(255, 92, 56, .75); }
+  .terminal-bar .title {
+    margin-inline-start: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: .78rem;
+    color: var(--faint);
+  }
+
+  .terminal pre {
+    margin: 0;
+    padding: var(--space-5);
+    overflow-x: auto;
+    font-size: clamp(.82rem, .78rem + .3vw, .95rem);
+    line-height: 1.7;
+    background: transparent;
+    border: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .terminal pre code {
+    display: block;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--text);
+  }
+  .terminal .prompt { color: var(--accent); user-select: none; }
+  .terminal .comment { color: var(--faint); }
+  .terminal .url { color: var(--accent-soft); }
+
+  .terminal-note {
+    margin: var(--space-3) 0 0;
+    font-size: .88rem;
+    color: var(--muted);
+    max-width: var(--measure);
+  }
+  .terminal-note code { font-size: .92em; }
+
+  /* ---------- page sections ---------- */
+
+  .section {
+    max-width: var(--content);
+    margin-inline: auto;
+    padding: var(--space-8) var(--space-5);
+    border-block-start: 1px solid var(--border-soft);
+  }
+
+  .section-head { margin-block-end: var(--space-6); }
+
+  .kicker {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-block-end: var(--space-2);
+  }
+
+  .section h2 {
+    font-size: clamp(1.5rem, 1.2rem + 1.6vw, 2.1rem);
+  }
+
+  .section .lede {
+    font-size: clamp(1.02rem, .98rem + .4vw, 1.2rem);
+    color: var(--muted);
+    margin-block-start: var(--space-3);
+  }
+
+  /* the idea — numbered flow */
+
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+    gap: var(--space-4);
+    counter-reset: step;
+  }
+
+  .steps li {
+    counter-increment: step;
+    position: relative;
+    padding: var(--space-5);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-l);
+    background: linear-gradient(180deg, var(--surface), var(--bg-soft));
+    font-size: .97rem;
+    color: var(--muted);
+  }
+  .steps li::before {
+    content: counter(step, decimal-leading-zero);
+    display: block;
+    font-family: var(--font-mono);
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-block-end: var(--space-3);
+  }
+  .steps li::after {
+    content: "";
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    block-size: 1px;
+    background: linear-gradient(to right, transparent, rgba(255,92,56,.5), transparent);
+    opacity: 0;
+    transition: opacity .2s ease;
+  }
+  .steps li:hover { border-color: var(--border); }
+  .steps li:hover::after { opacity: 1; }
+  .steps strong, .steps .file { color: var(--text); }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-block-start: var(--space-3);
+  }
+
+  .chip {
+    font-family: var(--font-mono);
+    font-size: .72rem;
+    padding: .18rem .6rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* why not just prompt — argument cards */
+
+  .args {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr));
+    gap: var(--space-4);
+  }
+
+  .args li {
+    padding: var(--space-5);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-l);
+    background: var(--surface);
+  }
+
+  .args .icon {
+    display: grid;
+    place-items: center;
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+    border-radius: var(--radius-m);
+    border: 1px solid var(--border);
+    background: var(--accent-dim);
+    color: var(--accent);
+    margin-block-end: var(--space-4);
+  }
+
+  .args h3 {
+    font-size: 1.08rem;
+    margin-block-end: var(--space-2);
+  }
+  .args p {
+    margin: 0;
+    font-size: .95rem;
+    color: var(--muted);
+  }
+  .args strong { color: var(--text); }
+
+  /* the standard — link rows */
+
+  .links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+    max-width: 46rem;
+  }
+
+  .links a {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-4) var(--space-5);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-m);
+    background: var(--surface);
+    text-decoration: none;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .links a:hover { border-color: var(--accent); background: var(--accent-dim); color: var(--text); }
+
+  .links .label { font-weight: 550; }
+  .links .hint { font-size: .85rem; color: var(--faint); text-align: end; }
+  .links a:hover .hint { color: var(--muted); }
+
+  /* governance + status prose */
+
+  .prose { max-width: var(--measure); color: var(--muted); }
+  .prose strong, .prose .file { color: var(--text); }
+  .prose a { color: var(--text); }
+  .prose code { font-size: .9em; }
+
+  /* footer */
+
+  .footer {
+    border-block-start: 1px solid var(--border-soft);
+    padding: var(--space-6) var(--space-5) var(--space-7);
+    max-width: var(--content);
+    margin-inline: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-5);
+    align-items: baseline;
+    justify-content: space-between;
+    font-size: .88rem;
+    color: var(--faint);
+  }
+  .footer .file { font-size: .95em; }
+  .footer a { color: var(--muted); }
+  .footer nav { display: flex; flex-wrap: wrap; gap: var(--space-4); }
+
+  @media (max-width: 30rem) {
+    .topbar-inner { padding-inline: var(--space-4); }
+    .nav a:not(.nav-cta) { display: none; }
+    .hero, .section { padding-inline: var(--space-4); }
+    .actions { flex-direction: column; align-items: stretch; }
+    .btn { justify-content: center; }
+    .terminal-bar .title { display: none; }
+    .links a { flex-direction: column; gap: var(--space-1); }
+    .links .hint { text-align: start; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    :where(a, .btn, .steps li)::after, * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  }
 </style>
 </head>
 <body>
-<main>
-  <p class="tag">An open standard proposal — community-governed and MIT licensed, in the spirit of <a href="https://agents.md">agents.md</a> and Anthropic's <code>CLAUDE.md</code></p>
-  <h1><span class="file">ADVERSARIAL_REVIEW.md</span></h1>
 
-  <p><code>AGENTS.md</code> gave every repository a shared way to tell agents
-  <em>how to work</em>. <span class="file">ADVERSARIAL_REVIEW.md</span> is the
-  open counterpart: a shared way to tell them <em>how to doubt</em>.</p>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="wordmark" href="#top">
+      <svg class="mark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z"/>
+        <path d="m9 12 2 2 4-4"/>
+      </svg>
+      ADVERSARIAL_REVIEW.md
+    </a>
+    <nav class="nav" aria-label="Site">
+      <a href="#idea">The idea</a>
+      <a href="#why">Why a file</a>
+      <a href="#standard">The standard</a>
+      <a href="#governance">Governance</a>
+      <a class="nav-cta" href="https://github.com/awdemos/adversarial-review">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </nav>
+  </div>
+</header>
 
-  <p>It is one file at the repo root that declares how adversarial review is
-  done in that repository — which lenses, what counts as evidence, how
-  severities are assigned — so any agent that reads it stops rubber-stamping
-  its own output. Green CI proves the code does what its author imagined
-  testing; this standard exists because agents now write code faster than
-  humans can review it, and review has to be declared, evidence-backed, and
-  machine-readable to keep up.</p>
+<main id="top">
 
-  <p>The standard is versioned, MIT licensed, and governed in the open.
-  Changes go through a public process — issues before pull requests,
-  cryptographically verified commits, recorded signoff on every merge — and
-  anyone may participate. No vendor controls it, and no adopter must accept
-  it unchanged: take the protocol, customize the repo-specific section, and
-  propose improvements back to the community.</p>
+  <!-- ===================== hero ===================== -->
 
-  <h2>The idea</h2>
-  <ol>
-    <li>Drop an <span class="file">ADVERSARIAL_REVIEW.md</span> in your repo root.</li>
-    <li>It tells any coding agent: your work here is expected to survive
-      adversarial review — and here is how that review is done in this repo.</li>
-    <li>The agent reviews as an adversary, pass by pass, one lens at a time
-      (security, correctness, spec-compliance, performance, abuse,
-      operational, governance), with reproducible evidence for every finding
-      and an explicit per-lens verdict.</li>
-    <li>Findings go back to the authoring agent; CRITICAL/HIGH items are
-      fixed and the diff is re-reviewed before the work is called done.</li>
-    <li>You customize the repo-specific section; the protocol and its six
-      core lenses stay portable. (Changing the rules is itself a change —
-      see <a href="https://github.com/awdemos/adversarial-review/blob/main/CONTRIBUTING.md">the governance process</a>.)</li>
-  </ol>
+  <section class="hero">
+    <p class="eyebrow">An open standard proposal — community-governed and MIT licensed, in the spirit of <a href="https://agents.md">agents.md</a> and Anthropic&rsquo;s <code>CLAUDE.md</code></p>
 
-  <h2>Quickstart</h2>
-  <pre>curl -O https://raw.githubusercontent.com/awdemos/adversarial-review/v1.0.1/ADVERSARIAL_REVIEW.md
-# read it, edit the "Repo-specific rules" section, commit</pre>
-  <p>Pinned to the <code>v1.0.1</code> tag for provenance; verify with
-  <code>git tag -v</code> or the SHA-256 published in the
-  <a href="https://github.com/awdemos/adversarial-review/blob/main/CHANGELOG.md">CHANGELOG</a>.</p>
+    <h1><span>ADVERSARIAL_</span>&#8203;<span class="accent">REVIEW</span>.md</h1>
 
-  <h2>Why not just prompt for it?</h2>
-  <ul>
-    <li><strong>Persistence.</strong> A prompt is forgotten; a file in the repo
-      binds every future session — provided the agent is configured to read
-      repo convention files, exactly the mechanism that makes
-      <code>AGENTS.md</code> work.</li>
-    <li><strong>Portability.</strong> Any agent that reads repo conventions
-      picks it up with no integration; nothing about the standard is
-      tied to one vendor's tool.</li>
-    <li><strong>Accountability.</strong> The protocol demands reproducible,
-      severity-rated findings and explicit "checked and clean" verdicts per
-      lens — the difference between a review and a vibe check.</li>
-    <li><strong>Repo-owned rules.</strong> The repo declares its own invariants,
-      known weak spots, and required checks. Generic review becomes
-      <em>this</em> codebase's review.</li>
-  </ul>
+    <p class="pitch"><code>AGENTS.md</code> gave every repository a shared way to tell agents
+    <em>how to work</em>. <span class="file">ADVERSARIAL_REVIEW.md</span> is the
+    open counterpart: a shared way to tell them <em>how to doubt</em>.</p>
 
-  <h2>The standard</h2>
-  <p>The canonical, versioned template lives in this repo:</p>
-  <ul>
-    <li><a href="https://github.com/awdemos/adversarial-review/blob/main/ADVERSARIAL_REVIEW.md"><span class="file">ADVERSARIAL_REVIEW.md</span></a> — the file you copy into your repo.</li>
-    <li><a href="https://github.com/awdemos/adversarial-review">GitHub repository</a> — issues, PRs, and the full governance process.</li>
-  </ul>
+    <div class="actions">
+      <a class="btn btn-primary" href="https://github.com/awdemos/adversarial-review/blob/main/ADVERSARIAL_REVIEW.md">
+        Get the file
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a class="btn" href="https://github.com/awdemos/adversarial-review/blob/main/ADVERSARIAL_REVIEW.md">Read the standard</a>
+      <a class="btn" href="https://github.com/awdemos/adversarial-review/blob/main/CONTRIBUTING.md">Governance</a>
+    </div>
 
-  <h2>Governance</h2>
-  <p>A standard about review discipline owes its own contributors the same
-  discipline: issues are opened and accepted before any PR, every commit is
-  cryptographically verified (SSH or GPG signed), and every merge to
-  <code>main</code> carries an <strong>NCO signoff</strong> — a named
-  non-commissioned officer of record who independently reviewed the change
-  and takes responsibility for it. Full process:
-  <a href="https://github.com/awdemos/adversarial-review/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
+    <div class="terminal">
+      <div class="terminal-bar" aria-hidden="true">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="title">quickstart — copy, customize, commit</span>
+      </div>
+      <pre><code><span class="prompt">$</span> curl -O <span class="url">https://raw.githubusercontent.com/awdemos/adversarial-review/v1.0.1/ADVERSARIAL_REVIEW.md</span>
+<span class="comment"># read it, edit the "Repo-specific rules" section, commit</span></code></pre>
+    </div>
+    <p class="terminal-note">Pinned to the <code>v1.0.1</code> tag for provenance; verify with
+    <code>git tag -v</code> or the SHA-256 published in the
+    <a href="https://github.com/awdemos/adversarial-review/blob/main/CHANGELOG.md">CHANGELOG</a>.</p>
 
-  <h2>Status</h2>
-  <p>v1.0.1 — the protocol (lenses, severity taxonomy, evidence rule, output
-  format) is stable under semantic versioning; template text may tighten in
-  patch releases. v1.0.0 was battle-tested by a 347-agent adversarial review
-  of this standard itself; its findings are in
-  <a href="https://github.com/awdemos/adversarial-review/blob/main/docs/review-2026-10-17.md">docs/review-2026-10-17.md</a>.
-  <a href="https://github.com/awdemos/adversarial-review/blob/main/LICENSE">MIT License</a>.
-  Feedback and PRs are welcome under the governance process above.</p>
+    <p class="prose" style="margin-block-start: var(--space-7)">It is one file at the repo root that declares how adversarial review is
+    done in that repository — which lenses, what counts as evidence, how
+    severities are assigned — so any agent that reads it stops rubber-stamping
+    its own output. Green CI proves the code does what its author imagined
+    testing; this standard exists because agents now write code faster than
+    humans can review it, and review has to be declared, evidence-backed, and
+    machine-readable to keep up.</p>
+
+    <p class="prose">The standard is versioned, MIT licensed, and governed in the open.
+    Changes go through a public process — issues before pull requests,
+    cryptographically verified commits, recorded signoff on every merge — and
+    anyone may participate. No vendor controls it, and no adopter must accept
+    it unchanged: take the protocol, customize the repo-specific section, and
+    propose improvements back to the community.</p>
+  </section>
+
+  <!-- ===================== the idea ===================== -->
+
+  <section class="section" id="idea">
+    <div class="section-head">
+      <span class="kicker">The idea</span>
+      <h2>One file that makes review adversarial</h2>
+    </div>
+
+    <ol class="steps">
+      <li>Drop an <span class="file">ADVERSARIAL_REVIEW.md</span> in your repo root.</li>
+      <li>It tells any coding agent: your work here is expected to survive
+        adversarial review — and here is how that review is done in this repo.</li>
+      <li>The agent reviews as an adversary, pass by pass, one lens at a time,
+        with reproducible evidence for every finding and an explicit per-lens
+        verdict.
+        <span class="chips" aria-label="Review lenses">
+          <span class="chip">security</span><span class="chip">correctness</span><span class="chip">spec-compliance</span><span class="chip">performance</span><span class="chip">abuse</span><span class="chip">operational</span><span class="chip">governance</span>
+        </span></li>
+      <li>Findings go back to the authoring agent; <strong>CRITICAL/HIGH</strong> items are
+        fixed and the diff is re-reviewed before the work is called done.</li>
+      <li>You customize the repo-specific section; the protocol and its six
+        core lenses stay portable. (Changing the rules is itself a change —
+        see <a href="https://github.com/awdemos/adversarial-review/blob/main/CONTRIBUTING.md">the governance process</a>.)</li>
+    </ol>
+  </section>
+
+  <!-- ===================== why a file ===================== -->
+
+  <section class="section" id="why">
+    <div class="section-head">
+      <span class="kicker">Why not just prompt for it?</span>
+      <h2>A prompt is a wish. A file is a rule.</h2>
+    </div>
+
+    <ul class="args">
+      <li>
+        <span class="icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v14"/><path d="m6 8 6-6 6 6"/><path d="M4 22h16"/></svg>
+        </span>
+        <h3>Persistence</h3>
+        <p>A prompt is forgotten; a file in the repo binds every future
+        session — provided the agent is configured to read repo convention
+        files, exactly the mechanism that makes <code>AGENTS.md</code> work.</p>
+      </li>
+      <li>
+        <span class="icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 0 20 15.3 15.3 0 0 1 0-20z"/></svg>
+        </span>
+        <h3>Portability</h3>
+        <p>Any agent that reads repo conventions picks it up with no
+        integration; nothing about the standard is tied to one vendor&rsquo;s
+        tool.</p>
+      </li>
+      <li>
+        <span class="icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        </span>
+        <h3>Accountability</h3>
+        <p>The protocol demands reproducible, severity-rated findings and
+        explicit &ldquo;checked and clean&rdquo; verdicts per lens — the difference
+        between a review and a vibe check.</p>
+      </li>
+      <li>
+        <span class="icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </span>
+        <h3>Repo-owned rules</h3>
+        <p>The repo declares its own invariants, known weak spots, and
+        required checks. Generic review becomes <em>this</em> codebase&rsquo;s
+        review.</p>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ===================== the standard ===================== -->
+
+  <section class="section" id="standard">
+    <div class="section-head">
+      <span class="kicker">The standard</span>
+      <h2>Canonical, versioned, copyable</h2>
+      <p class="lede">The canonical, versioned template lives in this repo:</p>
+    </div>
+
+    <ul class="links">
+      <li><a href="https://github.com/awdemos/adversarial-review/blob/main/ADVERSARIAL_REVIEW.md">
+        <span class="label"><span class="file">ADVERSARIAL_REVIEW.md</span></span>
+        <span class="hint">the file you copy into your repo</span>
+      </a></li>
+      <li><a href="https://github.com/awdemos/adversarial-review">
+        <span class="label">GitHub repository</span>
+        <span class="hint">issues, PRs, and the full governance process</span>
+      </a></li>
+    </ul>
+  </section>
+
+  <!-- ===================== governance ===================== -->
+
+  <section class="section" id="governance">
+    <div class="section-head">
+      <span class="kicker">Governance</span>
+      <h2>Review discipline, applied to itself</h2>
+    </div>
+
+    <p class="prose">A standard about review discipline owes its own contributors the same
+    discipline: issues are opened and accepted before any PR, every commit is
+    cryptographically verified (SSH or GPG signed), and every merge to
+    <code>main</code> carries an <strong>NCO signoff</strong> — a named
+    non-commissioned officer of record who independently reviewed the change
+    and takes responsibility for it. Full process:
+    <a href="https://github.com/awdemos/adversarial-review/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
+  </section>
+
+  <!-- ===================== status ===================== -->
+
+  <section class="section" id="status">
+    <div class="section-head">
+      <span class="kicker">Status</span>
+      <h2>Stable under semantic versioning</h2>
+    </div>
+
+    <p class="prose">v1.0.1 — the protocol (lenses, severity taxonomy, evidence rule, output
+    format) is stable under semantic versioning; template text may tighten in
+    patch releases. v1.0.0 was battle-tested by a 347-agent adversarial review
+    of this standard itself; its findings are in
+    <a href="https://github.com/awdemos/adversarial-review/blob/main/docs/review-2026-10-17.md">docs/review-2026-10-17.md</a>.
+    <a href="https://github.com/awdemos/adversarial-review/blob/main/LICENSE">MIT License</a>.
+    Feedback and PRs are welcome under the governance process above.</p>
+  </section>
+
 </main>
+
+<footer class="footer">
+  <span><span class="file">ADVERSARIAL_REVIEW.md</span> — an open standard proposal</span>
+  <nav aria-label="Footer">
+    <a href="https://github.com/awdemos/adversarial-review/blob/main/LICENSE">MIT License</a>
+    <a href="https://github.com/awdemos/adversarial-review/blob/main/CHANGELOG.md">CHANGELOG</a>
+    <a href="https://github.com/awdemos/adversarial-review">GitHub</a>
+  </nav>
+</footer>
+
 </body>
 </html>
