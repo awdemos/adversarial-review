@@ -18,6 +18,20 @@ Quickstart:
 curl -O https://raw.githubusercontent.com/awdemos/adversarial-review/v1.0.1/ADVERSARIAL_REVIEW.md
 ```
 
+## Install the skill
+
+Coding agents (Claude Code, Kimi Code, Codex, …) can run the whole protocol
+from an installable skill:
+
+```sh
+git clone https://github.com/awdemos/adversarial-review.git
+cp -r adversarial-review/skill/adversarial-review ~/.claude/skills/   # or ~/.kimi-code/skills/, etc.
+```
+
+Then just say **"run an adversarial review"** in any project. The skill finds
+your repo's `ADVERSARIAL_REVIEW.md` and follows it; without one, it falls
+back to the bundled v1.x default protocol ([skill/adversarial-review/SKILL.md](./skill/adversarial-review/SKILL.md)).
+
 ## For AI agents installing this standard
 
 You are an AI coding agent reading this README. To adopt the standard in the
