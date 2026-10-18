@@ -427,6 +427,14 @@
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
     gap: var(--space-4);
     counter-reset: step;
+    container-type: inline-size;
+  }
+
+  /* per-row track sizing once the grid has 2+ columns; cross-row
+     equalization is applied by the card-height equalizer script below —
+     CSS alone can't equalize heights across wrapped grid rows */
+  @container (min-width: 35rem) {
+    .steps { grid-auto-rows: 1fr; }
   }
 
   .steps li {
@@ -438,6 +446,8 @@
     background: linear-gradient(180deg, var(--surface), var(--bg-soft));
     font-size: .97rem;
     color: var(--muted);
+    display: flex;
+    flex-direction: column;
   }
   .steps li::before {
     content: counter(step, decimal-leading-zero);
@@ -466,7 +476,8 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
-    margin-block-start: var(--space-3);
+    margin-block-start: auto;
+    padding-block-start: var(--space-3);
   }
 
   .chip {
@@ -506,13 +517,18 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr));
     gap: var(--space-4);
+    container-type: inline-size;
+  }
+
+  @container (min-width: 32rem) {
+    .args { grid-auto-rows: 1fr; }
   }
 
   .args li {
     padding: var(--space-5);
     border: 1px solid var(--border-soft);
     border-radius: var(--radius-l);
-    background: var(--surface);
+    background: linear-gradient(180deg, var(--surface), var(--bg-soft));
     transition: border-color .2s ease;
   }
   .args li:hover { border-color: var(--border); }
@@ -832,6 +848,41 @@
     <a href="https://github.com/awdemos/adversarial-review">GitHub</a>
   </nav>
 </footer>
+
+<script>
+/* Equalize card heights within the .steps and .args grids once they have
+   2+ columns; single-column stacks keep natural heights. Wrapped grid rows
+   can't be equalized in CSS alone, so measure the tallest card and apply it
+   as a shared min-height, recomputing on resize and once fonts are ready. */
+(() => {
+  const grids = ['.steps', '.args']
+    .map(sel => document.querySelector(sel))
+    .filter(Boolean);
+  if (!grids.length) return;
+
+  const equalize = () => {
+    for (const grid of grids) {
+      const items = [...grid.children];
+      items.forEach(el => { el.style.minBlockSize = ''; });
+      const columns = getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+      if (columns < 2 || !items.length) continue;
+      const tallest = Math.max(...items.map(el => el.getBoundingClientRect().height));
+      items.forEach(el => { el.style.minBlockSize = tallest + 'px'; });
+    }
+  };
+
+  let frame = 0;
+  const schedule = () => {
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(equalize);
+  };
+
+  addEventListener('resize', schedule);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+  addEventListener('load', schedule);
+  equalize();
+})();
+</script>
 
 </body>
 </html>
