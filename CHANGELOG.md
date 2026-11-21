@@ -12,19 +12,6 @@ and the repo-specific worked example may tighten in patch releases.
 - Site: add Open Graph image and Twitter Card meta (`twitter:card`,
   `og:image`) so shared links unfurl with a preview card.
 
-- Added `AGENTS.md` — the Loops and Graphs agent control guide (v0.1.0),
-  a companion to ADVERSARIAL_REVIEW.md that tells agents how to plan and
-  execute non-trivial work so humans only approve the final step.
-
-- Added `loops-and-graphs/index.html` — landing page for the Loops and
-  Graphs framework, linked from the top navigation.
-
-- Added `skill/agent-control-guide/SKILL.md` — installable skill for the
-  Loops and Graphs protocol.
-
-- Updated `README.md` with Loops and Graphs quickstart and install
-  instructions.
-
 ## [1.0.1] — 2026-10-17
 
 First revision after publication. v1.0.0 was subjected to a 347-agent
