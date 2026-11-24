@@ -42,10 +42,9 @@ an optional add-on. Rationale and evidence are in
 - Site: rewrote the landing-page intro to lead with the AGENTS.md analogy and
   tightened the CI-skepticism paragraph; added Open Graph image and Twitter
   Card meta so shared links unfurl with a preview card.
-- Governance note: the quickstart remains pinned to the `v1.0.1` tag (a
-  lightweight tag pointing to a GPG-verified commit) until a `v1.1.0` tag is
-  published, so the documented command keeps resolving. The pinned template
-  predates the reviewer–challenger loop.
+- Published a GPG-signed `v1.1.0` tag. The quickstart pins to it
+  (`git tag -v v1.1.0`), and that template includes the
+  reviewer–challenger loop.
 - Adversarial review of this diff: `docs/adversarial-review-2026-11-24.md`
   (reviewer R, challenger C, one model family available — limitation recorded).
   The operator authorized this release; the linked issue, PR review and

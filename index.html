@@ -705,14 +705,12 @@
         <span class="title">quickstart — copy, customize, commit</span>
         <span class="hint">click command to select all</span>
       </div>
-      <pre><code><span class="prompt">$</span> curl -O <span class="url">https://raw.githubusercontent.com/awdemos/adversarial-review/v1.0.1/ADVERSARIAL_REVIEW.md</span>
+      <pre><code><span class="prompt">$</span> curl -O <span class="url">https://raw.githubusercontent.com/awdemos/adversarial-review/v1.1.0/ADVERSARIAL_REVIEW.md</span>
 <span class="comment"># read it, edit the "Repo-specific rules" section, commit</span></code></pre>
     </div>
-    <p class="terminal-note">Pinned to the <code>v1.0.1</code> tag for provenance; that tag is
-    lightweight, but it points to a GPG-verified commit — check with
-    <code>git verify-commit v1.0.1</code>. The working tree is <code>v1.1.0</code>;
-    the quickstart repins when a <code>v1.1.0</code> tag exists. The pinned
-    template predates the reviewer–challenger loop.</p>
+    <p class="terminal-note">Pinned to the signed <code>v1.1.0</code> tag for provenance —
+    verify it with <code>git tag -v v1.1.0</code>. That template includes the
+    default reviewer–challenger loop.</p>
     <p class="terminal-note">Coding agent? Install the
     <a href="https://github.com/awdemos/adversarial-review/tree/main/skill/adversarial-review"><code>adversarial-review</code> skill</a>
     into your agent's skills dir and say <code>run an adversarial review</code>.</p>

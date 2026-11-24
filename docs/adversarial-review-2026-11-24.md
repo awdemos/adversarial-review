@@ -78,3 +78,9 @@ A separate re-review pass verified all eleven dispositions against the working t
 ### Governance note
 
 The operator authorized the v1.1.0 version bump and publication. The linked issue, independent PR review and NCO signoff comment required by `CONTRIBUTING.md` were **not** performed here and are not implied by this review or release.
+
+### Post-release note
+
+A GPG-signed annotated `v1.1.0` tag was published after this review, and the
+quickstart was repointed to it. Findings above describe the state at review time
+and are retained as a historical record.

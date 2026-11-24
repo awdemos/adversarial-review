@@ -18,14 +18,12 @@ License: MIT (see [LICENSE](./LICENSE)).
 Quickstart:
 
 ```sh
-curl -O https://raw.githubusercontent.com/awdemos/adversarial-review/v1.0.1/ADVERSARIAL_REVIEW.md
+curl -O https://raw.githubusercontent.com/awdemos/adversarial-review/v1.1.0/ADVERSARIAL_REVIEW.md
 ```
 
-The working tree is v1.1.0; the quickstart stays pinned to the `v1.0.1` tag
-(lightweight, but pointing to a GPG-verified commit — verify with
-`git verify-commit v1.0.1`) until a `v1.1.0` tag is published. Repoint it at
-that point — a pin that resolves is better than a newer pin that 404s. The
-pinned template predates the reviewer–challenger loop.
+The quickstart pins to the signed `v1.1.0` tag — verify it with
+`git tag -v v1.1.0`. That template includes the default reviewer–challenger
+loop.
 
 ## Install the skill
 
@@ -50,7 +48,7 @@ repository you are working on, do exactly this, in order:
 1. **Fetch the pinned template** (never edit the URL's tag; upgrade versions
    deliberately, not silently):
    ```sh
-   curl -fsSL -o ADVERSARIAL_REVIEW.md https://raw.githubusercontent.com/awdemos/adversarial-review/v1.0.1/ADVERSARIAL_REVIEW.md
+   curl -fsSL -o ADVERSARIAL_REVIEW.md https://raw.githubusercontent.com/awdemos/adversarial-review/v1.1.0/ADVERSARIAL_REVIEW.md
    ```
 2. **Place it at the repository root**, next to `AGENTS.md` / `CLAUDE.md` /
    `README.md`. Do not nest it in a docs or config folder; the convention is
@@ -61,10 +59,8 @@ repository you are working on, do exactly this, in order:
    command, a path, a threshold), not a platitude.
 4. **Do not modify anything above that section.** The protocol rules, lenses,
    severity definitions, output format, and reviewer–challenger loop are the
-   portable standard; weakening them voids the contract. Note that the pinned
-   `v1.0.1` template predates the loop: it is an older contract, and the
-   installed skill follows that file rather than spawning C until you
-   deliberately upgrade to `v1.1.0`.
+   portable standard; weakening them voids the contract. The pinned `v1.1.0`
+   template includes that loop, and the installed skill follows it.
 5. **Report what you did**: state the template version installed, the
    repo-specific rules you wrote, and anything you could not determine
    (mark it UNVERIFIED, per the protocol, rather than guessing).
