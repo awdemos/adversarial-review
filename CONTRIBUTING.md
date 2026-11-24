@@ -17,8 +17,9 @@ All commits on `main` must be cryptographically verified:
 
 - Sign commits with **GPG** (`git commit -S`) or **SSH** (`git commit -S --gpg-format=ssh`),
   with the signing key registered on your GitHub account.
-- The repo requires verified signatures on the protected `main` branch.
-  Unsigned or unverifiable commits are rejected by the merge queue.
+- Verified signatures are required on `main` by this policy. Platform
+  enforcement (branch protection / rulesets) is configured separately by the
+  operator; its absence does not relax this requirement.
 - Agents and humans are held to the same bar: an agent-authored commit is
   committed under the human operator's identity and key, and the operator
   takes responsibility for it. No anonymous or keyless automation commits

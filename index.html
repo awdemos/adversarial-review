@@ -585,6 +585,16 @@
   .links .hint { font-size: .85rem; color: var(--faint); text-align: end; }
   .links a:hover .hint { color: var(--muted); }
 
+  /* research bibliography */
+  .research-group + .research-group { margin-block-start: var(--space-5); }
+  .research-group h3 { font-size: 1.05rem; margin-block-end: var(--space-3); }
+  .research-group .links { max-width: 56rem; gap: var(--space-2); }
+  .research-group .labels { display: flex; flex-direction: column; gap: var(--space-1); }
+  .research-group .label { font-weight: 500; }
+  .research-group .id { font-family: var(--font-mono); font-size: .75rem; color: var(--faint); }
+  .research-group .hint { font-size: .82rem; }
+  .research-note { margin-block-start: var(--space-6); font-size: .9rem; }
+
   /* governance + status prose */
 
   .prose { max-width: var(--measure); color: var(--muted); }
@@ -650,6 +660,7 @@
       <a href="#why">Why a file</a>
       <a href="#standard">The standard</a>
       <a href="#governance">Governance</a>
+      <a href="#research">Research</a>
       <a class="nav-cta" href="https://github.com/awdemos/adversarial-review">
         <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
         GitHub
@@ -689,17 +700,20 @@
       <pre><code><span class="prompt">$</span> curl -O <span class="url">https://raw.githubusercontent.com/awdemos/adversarial-review/v1.0.1/ADVERSARIAL_REVIEW.md</span>
 <span class="comment"># read it, edit the "Repo-specific rules" section, commit</span></code></pre>
     </div>
-    <p class="terminal-note">Pinned to the <code>v1.0.1</code> tag for provenance; verify with
-    <code>git tag -v</code> or the SHA-256 published in the
-    <a href="https://github.com/awdemos/adversarial-review/blob/main/CHANGELOG.md">CHANGELOG</a>.</p>
+    <p class="terminal-note">Pinned to the <code>v1.0.1</code> tag for provenance; that tag is
+    lightweight, but it points to a GPG-verified commit — check with
+    <code>git verify-commit v1.0.1</code>. The working tree is <code>v1.1.0</code>;
+    the quickstart repins when a <code>v1.1.0</code> tag exists. The pinned
+    template predates the reviewer–challenger loop.</p>
     <p class="terminal-note">Coding agent? Install the
     <a href="https://github.com/awdemos/adversarial-review/tree/main/skill/adversarial-review"><code>adversarial-review</code> skill</a>
     into your agent's skills dir and say <code>run an adversarial review</code>.</p>
 
     <p class="prose" style="margin-block-start: var(--space-7)">It is one file at the repo root that declares how adversarial review is
     done in that repository — which lenses, what counts as evidence, how
-    severities are assigned — so any agent that reads it stops rubber-stamping
-    its own output. Green CI proves the code does what its author imagined
+    severities are assigned, how a challenger disputes the reviewer's findings,
+    and how the disagreement is reconciled — so any agent that reads it stops
+    rubber-stamping its own output. Green CI proves the code does what its author imagined
     testing; this standard exists because agents now write code faster than
     humans can review it, and review has to be declared, evidence-backed, and
     machine-readable to keep up.</p>
@@ -728,16 +742,19 @@
       <li>Drop an <span class="file">ADVERSARIAL_REVIEW.md</span> in your repo root.</li>
       <li>It tells any coding agent: your work here is expected to survive
         adversarial review — and here is how that review is done in this repo.</li>
-      <li>The agent reviews as an adversary, pass by pass, one lens at a time,
-        with reproducible evidence for every finding and an explicit per-lens
-        verdict.
+      <li>A reviewer R proposes findings pass by pass, one lens at a time,
+        with reproducible evidence and confidence; a challenger C disputes
+        those findings with typed, code-cited disagreements. The artifact is
+        frozen while they argue.
         <span class="chips" aria-label="Review lenses">
           <span class="chip">security</span><span class="chip">correctness</span><span class="chip">spec-compliance</span><span class="chip">performance</span><span class="chip">abuse</span><span class="chip">operational</span><span class="chip">governance</span>
         </span></li>
-      <li>Findings go back to the authoring agent; <strong>CRITICAL/HIGH</strong> items are
-        fixed and the diff is re-reviewed before the work is called done.</li>
-      <li>You customize the repo-specific section; the protocol and its six
-        core lenses stay portable. (Changing the rules is itself a change —
+      <li>Every objection is reconciled — accepted and fixed, or rejected with
+        evidence. <strong>CRITICAL/HIGH</strong> items are fixed first and the diff is
+        re-reviewed before the work is called done; unresolved concerns go to
+        a human arbiter.</li>
+      <li>You customize the repo-specific section; the protocol, its core
+        lenses, and the reviewer–challenger loop stay portable. (Changing the rules is itself a change —
         see <a href="https://github.com/awdemos/adversarial-review/blob/main/CONTRIBUTING.md">the governance process</a>.)</li>
     </ol>
   </section>
@@ -828,21 +845,132 @@
     <a href="https://github.com/awdemos/adversarial-review/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
   </section>
 
+  <!-- ===================== research ===================== -->
+
+  <section class="section" id="research">
+    <div class="section-head">
+      <span class="kicker">Research basis</span>
+      <h2>The evidence behind the protocol</h2>
+      <p class="lede">The empirical claims behind this protocol — about self-review, independent challenge, agreement, evidence, and re-review — are traceable to published work. Design choices such as the round cap and the NCO escalation path are recorded in <a href="https://github.com/awdemos/adversarial-review/blob/main/docs/v1.1-rationale.md">the rationale</a>, not derived from these papers. The list below covers agentic adversarial review and the mechanisms it depends on; the <a href="https://github.com/awdemos/adversarial-review/blob/main/docs/research-basis.md">annotated bibliography with relevance notes</a> lives in the repo.</p>
+    </div>
+
+    <p class="prose">The direct source is <a href="https://arxiv.org/abs/2608.18167">Qiu and Gill's Adversarial Review</a>: a reviewer and a critic of that review, with the artifact frozen during the exchange. Their results are also a warning. Naive reviewer–critic agreement scored <em>lower</em> than simpler methods on a review benchmark; only explicit, evidence-typed disagreement fixed it. That is why this standard treats agreement as neither evidence nor a verdict.</p>
+
+    <div class="research-group">
+      <h3>Agentic adversarial review</h3>
+      <ul class="links">
+        <li><a href="https://arxiv.org/abs/2608.18167"><span class="labels"><span class="label">Adversarial Review: Structured Disagreement for Grounded Agentic Code Review</span><span class="id">arXiv:2608.18167 · Qiu and Gill, 2026</span></span><span class="hint">reviewer + critic; false consensus; typed disagreement</span></a></li>
+        <li><a href="https://arxiv.org/abs/2604.19049"><span class="labels"><span class="label">Refute-or-Promote: An Adversarial Stage-Gated Multi-Agent Review Methodology for High-Precision LLM-Assisted Defect Discovery</span><span class="id">arXiv:2604.19049 · Agarwal, 2026</span></span><span class="hint">kill mandates; cold start; cross-model critic</span></a></li>
+        <li><a href="https://arxiv.org/abs/2611.23283"><span class="labels"><span class="label">When Single Agent Is Enough: Rethinking Multi-Agent Systems for Automated Code Review</span><span class="id">arXiv:2611.23283 · Li, Dam and Ahmed, 2026</span></span><span class="hint">counter-evidence: multi-agent is not always better</span></a></li>
+        <li><a href="https://arxiv.org/abs/2603.15911"><span class="labels"><span class="label">Human-AI Synergy in Agentic Code Review</span><span class="id">arXiv:2603.15911 · Zhong et al., 2026</span></span><span class="hint">AI suggestions adopted less; human oversight matters</span></a></li>
+        <li><a href="https://arxiv.org/abs/2606.13175"><span class="labels"><span class="label">The End of Code Review: Coding Agents Supersede Human Inspection</span><span class="id">arXiv:2606.13175 · Monperrus, 2026</span></span><span class="hint">counterpoint to the human-arbiter rule</span></a></li>
+      </ul>
+    </div>
+
+    <div class="research-group">
+      <h3>Multi-agent debate and structured disagreement</h3>
+      <ul class="links">
+        <li><a href="https://arxiv.org/abs/2305.14325"><span class="labels"><span class="label">Improving Factuality and Reasoning in Language Models through Multiagent Debate</span><span class="id">arXiv:2305.14325 · Du et al., ICML 2024</span></span><span class="hint">foundational debate result</span></a></li>
+        <li><a href="https://arxiv.org/abs/2311.17371"><span class="labels"><span class="label">Should we be going MAD? A Look at Multi-Agent Debate Strategies for LLMs</span><span class="id">arXiv:2311.17371 · Smit et al., ICML 2024</span></span><span class="hint">debate often loses to cheaper baselines</span></a></li>
+        <li><a href="https://arxiv.org/abs/2305.19118"><span class="labels"><span class="label">Encouraging Divergent Thinking in Large Language Models through Multi-Agent Debate</span><span class="id">arXiv:2305.19118 · Liang et al., EMNLP 2024</span></span><span class="hint">Degeneration-of-Thought; tit-for-tat plus judge</span></a></li>
+        <li><a href="https://arxiv.org/abs/2508.17536"><span class="labels"><span class="label">Debate or Vote: Which Yields Better Decisions in Multi-Agent Large Language Models?</span><span class="id">arXiv:2508.17536 · Choi, Zhu and Li, 2025</span></span><span class="hint">voting explains most of the gain</span></a></li>
+        <li><a href="https://arxiv.org/abs/2511.07784"><span class="labels"><span class="label">Can LLM Agents Really Debate? A Controlled Study of Multi-Agent Debate in Logical Reasoning</span><span class="id">arXiv:2511.07784 · Wu, Li and Li, 2025</span></span><span class="hint">majority pressure suppresses correction</span></a></li>
+        <li><a href="https://arxiv.org/abs/2507.03928"><span class="labels"><span class="label">CortexDebate: Debating Sparsely and Equally for Multi-Agent Debate</span><span class="id">arXiv:2507.03928 · Sun et al., Findings ACL 2025</span></span><span class="hint">sparse, equal participation</span></a></li>
+        <li><a href="https://arxiv.org/abs/2608.03648"><span class="labels"><span class="label">Group Perspective Matters: Regulating Debate Relationships Can Mitigate Blind Conformity in Multi-Agent Debate</span><span class="id">arXiv:2608.03648 · Wu et al., 2026</span></span><span class="hint">blind conformity as a design failure</span></a></li>
+        <li><a href="https://arxiv.org/abs/2509.11035"><span class="labels"><span class="label">Free-MAD: Consensus-Free Multi-Agent Debate</span><span class="id">arXiv:2509.11035 · Cui et al., 2025</span></span><span class="hint">against forced consensus</span></a></li>
+        <li><a href="https://arxiv.org/abs/2601.05746"><span class="labels"><span class="label">DynaDebate: Breaking Homogeneity in Multi-Agent Debate with Dynamic Path Generation</span><span class="id">arXiv:2601.05746 · Li et al., 2026</span></span><span class="hint">homogeneous agents share errors</span></a></li>
+        <li><a href="https://arxiv.org/abs/2607.26212"><span class="labels"><span class="label">Multi-Agent Debate Strategies: Survey, Taxonomy, and Challenges</span><span class="id">arXiv:2607.26212 · Motger et al., 2026</span></span><span class="hint">taxonomy of 141 debate studies</span></a></li>
+        <li><a href="https://arxiv.org/abs/2603.01221"><span class="labels"><span class="label">Epistemic Gain, Aleatoric Cost: Uncertainty Decomposition in Multi-Agent Debate for Math Reasoning</span><span class="id">arXiv:2603.01221 · Qiao et al., 2026</span></span><span class="hint">when interaction pays for itself</span></a></li>
+        <li><a href="https://arxiv.org/abs/2408.00989"><span class="labels"><span class="label">On the Resilience of LLM-Based Multi-Agent Collaboration with Faulty Agents</span><span class="id">arXiv:2408.00989 · Huang et al., 2024</span></span><span class="hint">a critic must survive a bad reviewer</span></a></li>
+      </ul>
+    </div>
+
+    <div class="research-group">
+      <h3>Self-refinement and its limits</h3>
+      <ul class="links">
+        <li><a href="https://arxiv.org/abs/2303.17651"><span class="labels"><span class="label">Self-Refine: Iterative Refinement with Self-Feedback</span><span class="id">arXiv:2303.17651 · Madaan et al., NeurIPS 2023</span></span><span class="hint">fix-forward, but no independence</span></a></li>
+        <li><a href="https://arxiv.org/abs/2310.01798"><span class="labels"><span class="label">Large Language Models Cannot Self-Correct Reasoning Yet</span><span class="id">arXiv:2310.01798 · Huang et al., ICLR 2024</span></span><span class="hint">why self-review alone is not review</span></a></li>
+      </ul>
+    </div>
+
+    <div class="research-group">
+      <h3>Multi-agent review and coding systems</h3>
+      <ul class="links">
+        <li><a href="https://arxiv.org/abs/2402.02172"><span class="labels"><span class="label">CodeAgent: Autonomous Communicative Agents for Code Review</span><span class="id">arXiv:2402.02172 · Tang et al., 2024</span></span><span class="hint">QA-Checker keeps review on question</span></a></li>
+        <li><a href="https://arxiv.org/abs/2509.20502"><span class="labels"><span class="label">MARS: Toward More Efficient Multi-Agent Collaboration for LLM Reasoning</span><span class="id">arXiv:2509.20502 · Wang et al., 2025</span></span><span class="hint">structured reviews; meta-reviewer</span></a></li>
+        <li><a href="https://arxiv.org/abs/2405.11403"><span class="labels"><span class="label">MapCoder: Multi-Agent Code Generation for Competitive Problem Solving</span><span class="id">arXiv:2405.11403 · Islam et al., ACL 2024</span></span><span class="hint">staged review and repair</span></a></li>
+        <li><a href="https://arxiv.org/abs/2312.13010"><span class="labels"><span class="label">AgentCoder: Multi-Agent-based Code Generation with Iterative Testing and Optimisation</span><span class="id">arXiv:2312.13010 · Huang et al., 2023</span></span><span class="hint">separate tester, external feedback</span></a></li>
+        <li><a href="https://arxiv.org/abs/2502.05664"><span class="labels"><span class="label">CODESIM: Multi-Agent Code Generation and Problem Solving through Simulation-Driven Planning and Debugging</span><span class="id">arXiv:2502.05664 · Islam et al., NAACL 2025</span></span><span class="hint">simulation before finalizing code</span></a></li>
+        <li><a href="https://arxiv.org/abs/2501.07811"><span class="labels"><span class="label">CodeCoR: An LLM-Based Self-Reflective Multi-Agent Framework for Code Generation</span><span class="id">arXiv:2501.07811 · Pan, Zhang and Liu, 2025</span></span><span class="hint">intermediate-output gates</span></a></li>
+      </ul>
+    </div>
+
+    <div class="research-group">
+      <h3>Judging bias and arbitration</h3>
+      <ul class="links">
+        <li><a href="https://arxiv.org/abs/2410.21819"><span class="labels"><span class="label">Self-Preference Bias in LLM-as-a-Judge</span><span class="id">arXiv:2410.21819 · Wataoka, Takahashi and Ri, 2024</span></span><span class="hint">judges favor familiar text</span></a></li>
+        <li><a href="https://arxiv.org/abs/2406.07791"><span class="labels"><span class="label">Judging the Judges: A Systematic Study of Position Bias in LLM-as-a-Judge</span><span class="id">arXiv:2406.07791 · Shi et al., 2024</span></span><span class="hint">150k evaluations; systematic bias</span></a></li>
+        <li><a href="https://arxiv.org/abs/2505.19477"><span class="labels"><span class="label">Judging with Many Minds: Do More Perspectives Mean Less Prejudice? On Bias Amplifications and Resistance in Multi-Agent Based LLM-as-Judge</span><span class="id">arXiv:2505.19477 · Ma et al., Findings EMNLP 2025</span></span><span class="hint">debate can amplify judge bias</span></a></li>
+        <li><a href="https://arxiv.org/abs/2411.16594"><span class="labels"><span class="label">From Generation to Judgment: Opportunities and Challenges of LLM-as-a-judge</span><span class="id">arXiv:2411.16594 · Li et al., 2024</span></span><span class="hint">survey of judging and benchmarking</span></a></li>
+      </ul>
+    </div>
+
+    <div class="research-group">
+      <h3>Benchmarks</h3>
+      <ul class="links">
+        <li><a href="https://arxiv.org/abs/2310.06770"><span class="labels"><span class="label">SWE-bench: Can Language Models Resolve Real-World GitHub Issues?</span><span class="id">arXiv:2310.06770 · Jimenez et al., ICLR 2024</span></span><span class="hint">executable ground truth for patches</span></a></li>
+        <li><a href="https://arxiv.org/abs/2403.07974"><span class="labels"><span class="label">LiveCodeBench: Holistic and Contamination Free Evaluation of Large Language Models for Code</span><span class="id">arXiv:2403.07974 · Jain et al., 2024</span></span><span class="hint">contamination-resistant coding tasks</span></a></li>
+        <li><a href="https://arxiv.org/abs/2603.26130"><span class="labels"><span class="label">SWE-PRBench: Benchmarking AI Code Review Quality Against Pull Request Feedback</span><span class="id">arXiv:2603.26130 · Kumar, 2026</span></span><span class="hint">human review ground truth; κ = 0.75 judge</span></a></li>
+        <li><a href="https://arxiv.org/abs/2603.23448"><span class="labels"><span class="label">Code Review Agent Benchmark</span><span class="id">arXiv:2603.23448 · Zhang et al., 2026</span></span><span class="hint">c-CRAB: agents reviewing PRs</span></a></li>
+        <li><a href="https://arxiv.org/abs/2608.21311"><span class="labels"><span class="label">AI-to-AI Code Reviews of GitHub Pull Requests</span><span class="id">arXiv:2608.21311 · Selvanayagam and Ghaleb, ESEM 2026</span></span><span class="hint">248,641 AI-authored PRs</span></a></li>
+      </ul>
+    </div>
+
+    <div class="research-group">
+      <h3>Adversarial inputs and review beyond code</h3>
+      <ul class="links">
+        <li><a href="https://arxiv.org/abs/2306.05499"><span class="labels"><span class="label">Prompt Injection attack against LLM-integrated Applications</span><span class="id">arXiv:2306.05499 · Liu et al., 2023</span></span><span class="hint">untrusted repo content can steer a reviewer</span></a></li>
+        <li><a href="https://arxiv.org/abs/2406.13352"><span class="labels"><span class="label">AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents</span><span class="id">arXiv:2406.13352 · Debenedetti et al., NeurIPS 2024</span></span><span class="hint">tool-using agents under adversarial data</span></a></li>
+        <li><a href="https://arxiv.org/abs/2503.00061"><span class="labels"><span class="label">Adaptive Attacks Break Defenses Against Indirect Prompt Injection Attacks on LLM Agents</span><span class="id">arXiv:2503.00061 · Zhan et al., Findings NAACL 2025</span></span><span class="hint">prompt-only defenses are insufficient</span></a></li>
+        <li><a href="https://arxiv.org/abs/2504.19793"><span class="labels"><span class="label">Prompt Injection Attack to Tool Selection in LLM Agents</span><span class="id">arXiv:2504.19793 · Shi et al., NDSS 2026</span></span><span class="hint">malicious tool docs hijack tool choice</span></a></li>
+        <li><a href="https://arxiv.org/abs/2412.10415"><span class="labels"><span class="label">Generative Adversarial Reviews: When LLMs Become the Critic</span><span class="id">arXiv:2412.10415 · Bougie and Watanabe, 2024</span></span><span class="hint">adversarial review of scientific work</span></a></li>
+        <li><a href="https://arxiv.org/abs/2406.12708"><span class="labels"><span class="label">AgentReview: Exploring Peer Review Dynamics with LLM Agents</span><span class="id">arXiv:2406.12708 · Jin et al., EMNLP 2024</span></span><span class="hint">review, rebuttal, meta-review dynamics</span></a></li>
+        <li><a href="https://arxiv.org/abs/2503.08506"><span class="labels"><span class="label">ReviewAgents: Bridging the Gap Between Human and AI-Generated Paper Reviews</span><span class="id">arXiv:2503.08506 · Gao et al., 2025</span></span><span class="hint">reviewer plus area-chair agent</span></a></li>
+        <li><a href="https://arxiv.org/abs/2604.26506"><span class="labels"><span class="label">SafeReview: Defending LLM-based Review Systems Against Adversarial Hidden Prompts</span><span class="id">arXiv:2604.26506 · Xin et al., 2026</span></span><span class="hint">hidden prompts in submissions</span></a></li>
+        <li><a href="https://arxiv.org/abs/2506.11113"><span class="labels"><span class="label">Breaking the Reviewer: Assessing the Vulnerability of Large Language Models in Automated Peer Review Under Textual Adversarial Attacks</span><span class="id">arXiv:2506.11113 · Lin et al., Findings EMNLP 2025</span></span><span class="hint">text perturbations distort review scores</span></a></li>
+        <li><a href="https://arxiv.org/abs/2604.27924"><span class="labels"><span class="label">Can AI Be a Good Peer Reviewer? A Survey of Peer Review Process, Evaluation, and the Future</span><span class="id">arXiv:2604.27924 · Wu et al., 2026</span></span><span class="hint">review → re-review protocol survey</span></a></li>
+      </ul>
+    </div>
+
+    <p class="prose research-note">Read the counter-evidence too: <a href="https://arxiv.org/abs/2311.17371">Smit et al.</a> and <a href="https://arxiv.org/abs/2508.17536">Choi et al.</a> find that much of the benefit attributed to debate comes from cheaper ensembling or voting, and <a href="https://arxiv.org/abs/2505.19477">Ma et al.</a> find that debate can amplify judge bias. This is why the standard's protocol is about evidence and explicit disagreement, not about adding agents for their own sake. Since v1.1.0 the reviewer–challenger loop is the default; the decision and its counter-evidence are recorded in <a href="https://github.com/awdemos/adversarial-review/blob/main/docs/v1.1-rationale.md">docs/v1.1-rationale.md</a>.</p>
+
+    <p class="prose research-note">Citation note: a widely shared industry write-up links Du et al.'s debate paper to <code>arXiv:2305.19118</code>, which is actually Liang et al. The correct ID for Du et al. is <a href="https://arxiv.org/abs/2305.14325"><code>arXiv:2305.14325</code></a>. All IDs above were checked against arXiv metadata on 2026-11-24.</p>
+  </section>
+
   <!-- ===================== status ===================== -->
 
   <section class="section" id="status">
     <div class="section-head">
       <span class="kicker">Status</span>
-      <h2>Stable under semantic versioning <span class="badge">v1.0.1</span></h2>
+      <h2>Stable under semantic versioning <span class="badge">v1.1.0</span></h2>
     </div>
 
-    <p class="prose">v1.0.1 — the protocol (lenses, severity taxonomy, evidence rule, output
-    format) is stable under semantic versioning; template text may tighten in
-    patch releases. v1.0.0 was battle-tested by a 347-agent adversarial review
-    of this standard itself; its findings are in
+    <p class="prose">v1.1.0 — the protocol (seven rules, lenses, severity taxonomy,
+    evidence rule, output format, and the default reviewer–challenger loop) is
+    stable under semantic versioning; template text may tighten in patch
+    releases. The change is documented in
+    <a href="https://github.com/awdemos/adversarial-review/blob/main/CHANGELOG.md">CHANGELOG.md</a>.
+    v1.0.0 was battle-tested by a 347-agent adversarial review of this
+    standard itself; its findings are in
     <a href="https://github.com/awdemos/adversarial-review/blob/main/docs/review-2026-10-17.md">docs/review-2026-10-17.md</a>.
     <a href="https://github.com/awdemos/adversarial-review/blob/main/LICENSE">MIT License</a>.
     Feedback and PRs are welcome under the governance process above.</p>
+    <p class="prose research-note">Governance note: the operator authorized this
+    release. The linked issue, PR review and NCO signoff comment required by
+    <a href="https://github.com/awdemos/adversarial-review/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>
+    are still pending operator action; this release does not imply they were
+    given. The adversarial review of this diff is in
+    <a href="https://github.com/awdemos/adversarial-review/blob/main/docs/adversarial-review-2026-11-24.md">docs/adversarial-review-2026-11-24.md</a>.</p>
   </section>
 
 </main>
