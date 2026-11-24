@@ -25,6 +25,21 @@ The quickstart pins to the signed `v1.1.0` tag — verify it with
 `git tag -v v1.1.0`. That template includes the default reviewer–challenger
 loop.
 
+## Upgrade an existing install
+
+A repo-local `ADVERSARIAL_REVIEW.md` overrides the installed skill. If your
+copy says `Version 1.0.1`, the skill keeps following that older contract — and
+v1.0.1 has no challenger rule, so the R→C loop never runs. Overwrite it:
+
+```sh
+curl -fsSL -o ADVERSARIAL_REVIEW.md \
+  https://raw.githubusercontent.com/awdemos/adversarial-review/v1.1.0/ADVERSARIAL_REVIEW.md
+grep -m1 '^Version ' ADVERSARIAL_REVIEW.md   # expect: Version 1.1.0
+```
+
+If your installed skill predates v1.1.0, re-copy it too (below). Clients that
+cache the file or the v1.0.1 URL must refresh their cached copy.
+
 ## Install the skill
 
 Coding agents (Claude Code, Kimi Code, Codex, …) can run the whole protocol
@@ -46,7 +61,9 @@ You are an AI coding agent reading this README. To adopt the standard in the
 repository you are working on, do exactly this, in order:
 
 1. **Fetch the pinned template** (never edit the URL's tag; upgrade versions
-   deliberately, not silently):
+   deliberately, not silently). If `ADVERSARIAL_REVIEW.md` already exists,
+   read its `Version` line first and replace it if it is older than 1.1.0
+   (see "Upgrade an existing install"):
    ```sh
    curl -fsSL -o ADVERSARIAL_REVIEW.md https://raw.githubusercontent.com/awdemos/adversarial-review/v1.1.0/ADVERSARIAL_REVIEW.md
    ```

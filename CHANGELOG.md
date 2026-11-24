@@ -7,7 +7,9 @@ example may tighten in patch releases.
 
 ## [Unreleased]
 
-Nothing yet.
+- Clarified upgrade instructions: the README shows how to replace a stale
+  `v1.0.1` repo-local template, the skill flags older files instead of silently
+  following them, and the site repeats the upgrade note.
 
 ## [1.1.0] — 2026-11-24
 
