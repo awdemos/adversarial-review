@@ -23,7 +23,8 @@ curl -O https://raw.githubusercontent.com/awdemos/adversarial-review/v1.1.0/ADVE
 
 The quickstart pins to the signed `v1.1.0` tag — verify it with
 `git tag -v v1.1.0`. That template includes the default reviewer–challenger
-loop.
+loop. Use the tag URL, not `main`: raw.githubusercontent.com caches branch
+content and can serve an older revision, while a published tag is immutable.
 
 ## Upgrade an existing install
 
