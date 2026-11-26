@@ -7,9 +7,17 @@ example may tighten in patch releases.
 
 ## [Unreleased]
 
-- Clarified upgrade instructions: the README shows how to replace a stale
-  `v1.0.1` repo-local template, the skill flags older files instead of silently
-  following them, and the site repeats the upgrade note.
+- Removed retired-version callouts from public-facing guidance: the site no
+  longer repeats the upgrade note, and the README and skill describe stale
+  repo-local templates generically as pre-1.1.0 copies.
+- Site: added an above-the-fold proof strip and skill-install CTA, an FAQ
+  section answering common objections, and SEO/social metadata (JSON-LD and
+  refreshed titles and descriptions). Status and footer wording now match the
+  stable, versioned framing.
+- Adversarial-review fixes: quickstart now uses `curl -fsSL -o` with a version
+  check and an overwrite warning; provenance guidance says tag verification runs
+  in a clone and also compares the fetched file to the tagged template; the
+  proof strip restores list semantics for assistive technology.
 
 ## [1.1.0] — 2026-11-24
 

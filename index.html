@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ADVERSARIAL_REVIEW.md — systematically doubt AI-generated responses</title>
-<meta name="description" content="ADVERSARIAL_REVIEW.md is a repo-declared standard that gives coding agents a shared way to systematically doubt and improve upon AI-generated responses, with evidence-backed findings, honest severities, and per-lens verdicts.">
+<title>ADVERSARIAL_REVIEW.md — AGENTS.md for adversarial review</title>
+<meta name="description" content="ADVERSARIAL_REVIEW.md: AGENTS.md for adversarial review. A versioned protocol with evidence-backed findings, a challenger, and explicit reconciliation.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
 <link rel="canonical" href="https://adversarial-review.com/">
 <meta name="theme-color" content="#0a0a0d">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
-<meta property="og:title" content="ADVERSARIAL_REVIEW.md — systematically doubt AI-generated responses">
-<meta property="og:description" content="Like AGENTS.md but for review: a shared way to systematically doubt and improve upon AI-generated responses — with evidence-backed findings, honest severities, and per-lens verdicts.">
+<meta property="og:title" content="ADVERSARIAL_REVIEW.md — AGENTS.md for review">
+<meta property="og:description" content="A versioned protocol that makes agents doubt their own work: evidence-backed findings, a challenger, and explicit reconciliation.">
 <meta property="og:url" content="https://adversarial-review.com/">
 <meta property="og:site_name" content="ADVERSARIAL_REVIEW.md">
 <meta property="og:image" content="https://adversarial-review.com/og-image.png">
@@ -19,12 +19,26 @@
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="ADVERSARIAL_REVIEW.md — a shared way to systematically doubt and improve upon AI-generated responses">
+<meta property="og:image:alt" content="ADVERSARIAL_REVIEW.md — AGENTS.md for adversarial review, with a reviewer, a challenger, and reconciliation">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="ADVERSARIAL_REVIEW.md — systematically doubt AI-generated responses">
-<meta name="twitter:description" content="Like AGENTS.md but for review: a shared way to systematically doubt and improve upon AI-generated responses — with evidence-backed findings, honest severities, and per-lens verdicts.">
+<meta name="twitter:title" content="ADVERSARIAL_REVIEW.md — AGENTS.md for review">
+<meta name="twitter:description" content="A versioned protocol that makes agents doubt their own work: evidence-backed findings, a challenger, and explicit reconciliation.">
 <meta name="twitter:image" content="https://adversarial-review.com/og-image.png">
-<meta name="twitter:image:alt" content="ADVERSARIAL_REVIEW.md — a shared way to systematically doubt and improve upon AI-generated responses">
+<meta name="twitter:image:alt" content="ADVERSARIAL_REVIEW.md — AGENTS.md for adversarial review, with a reviewer, a challenger, and reconciliation">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "ADVERSARIAL_REVIEW.md",
+  "description": "A repo-declared standard for adversarial, evidence-backed AI code review.",
+  "applicationCategory": "DeveloperApplication",
+  "version": "1.1.0",
+  "url": "https://adversarial-review.com/",
+  "license": "https://opensource.org/license/mit",
+  "author": { "@type": "Person", "name": "Andrew White" },
+  "sameAs": "https://github.com/awdemos/adversarial-review"
+}
+</script>
 <style>
   :root {
     color-scheme: dark;
@@ -325,6 +339,40 @@
   }
   .btn-primary:hover { background: var(--accent-soft); border-color: var(--accent-soft); color: #14060a; }
 
+  /* proof strip — credibility signals beside the hero CTA */
+  .proof {
+    list-style: none;
+    margin: 0 0 var(--space-6);
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+    gap: var(--space-3);
+  }
+  .proof li { display: flex; }
+  .proof a {
+    flex: 1;
+    display: block;
+    padding: var(--space-4);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-m);
+    background: var(--surface);
+    text-decoration: none;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .proof a:hover { border-color: var(--accent); background: var(--accent-dim); }
+  .proof strong {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 1.15rem;
+    color: var(--text);
+  }
+  .proof span {
+    display: block;
+    margin-block-start: var(--space-1);
+    font-size: .82rem;
+    color: var(--faint);
+  }
+
   /* ---------- terminal card ---------- */
 
   .terminal {
@@ -602,6 +650,18 @@
   .research-group .hint { font-size: .82rem; }
   .research-note { margin-block-start: var(--space-6); font-size: .9rem; }
 
+  /* objection handling — compact Q&A list */
+
+  .faq {
+    display: grid;
+    gap: var(--space-5);
+    max-width: var(--measure);
+    margin: 0;
+  }
+  .faq h3 { font-size: 1.05rem; }
+  .faq p { margin: var(--space-2) 0 0; font-size: .95rem; color: var(--muted); }
+  .faq a { color: var(--text); }
+
   /* governance + status prose */
 
   .prose { max-width: var(--measure); color: var(--muted); }
@@ -665,6 +725,7 @@
     <nav class="nav" aria-label="Site">
       <a href="#idea">The idea</a>
       <a href="#why">Why a file</a>
+      <a href="#faq">FAQ</a>
       <a href="#standard">The standard</a>
       <a href="#governance">Governance</a>
       <a href="#research">Research</a>
@@ -696,8 +757,23 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
       <a class="btn" href="https://github.com/awdemos/adversarial-review/blob/main/ADVERSARIAL_REVIEW.md">Read the standard</a>
-      <a class="btn" href="https://github.com/awdemos/adversarial-review/blob/main/CONTRIBUTING.md">Governance</a>
+      <a class="btn" href="https://github.com/awdemos/adversarial-review#install-the-skill">Install the skill</a>
     </div>
+
+    <ul class="proof" role="list" aria-label="Project at a glance">
+      <li><a href="https://github.com/awdemos/adversarial-review/blob/main/docs/review-2026-10-17.md">
+        <strong>347 agents</strong><span>adversarial review of the initial release</span>
+      </a></li>
+      <li><a href="#research">
+        <strong>44 sources</strong><span>verified research citations</span>
+      </a></li>
+      <li><a href="#standard">
+        <strong>7 rules · 3 roles</strong><span>a portable, versioned contract</span>
+      </a></li>
+      <li><a href="https://github.com/awdemos/adversarial-review/blob/main/CHANGELOG.md">
+        <strong>v1.1.0</strong><span>MIT licensed, signed release</span>
+      </a></li>
+    </ul>
 
     <div class="terminal">
       <div class="terminal-bar" aria-hidden="true">
@@ -705,14 +781,20 @@
         <span class="title">quickstart — copy, customize, commit</span>
         <span class="hint">click command to select all</span>
       </div>
-      <pre><code><span class="prompt">$</span> curl -O <span class="url">https://raw.githubusercontent.com/awdemos/adversarial-review/v1.1.0/ADVERSARIAL_REVIEW.md</span>
-<span class="comment"># read it, edit the "Repo-specific rules" section, commit</span></code></pre>
+      <pre><code><span class="prompt">$</span> curl -fsSL -o ADVERSARIAL_REVIEW.md \
+    <span class="url">https://raw.githubusercontent.com/awdemos/adversarial-review/v1.1.0/ADVERSARIAL_REVIEW.md</span>
+<span class="prompt">$</span> grep -m1 '^Version ' ADVERSARIAL_REVIEW.md   <span class="comment"># expect: Version 1.1.0</span>
+<span class="comment"># edit the "Repo-specific rules" section, commit</span></code></pre>
     </div>
-    <p class="terminal-note">Pinned to the signed <code>v1.1.0</code> tag for provenance —
-    verify it with <code>git tag -v v1.1.0</code>. That template includes the
-    default reviewer–challenger loop. Already on <code>v1.0.1</code>? Overwrite
-    your local copy with the same command: the skill follows repo-local files,
-    and v1.0.1 has no challenger loop.</p>
+    <p class="terminal-note">Pinned to the signed <code>v1.1.0</code> tag for provenance.
+    In a clone of <code>awdemos/adversarial-review</code>, verify the tag with
+    <code>git tag -v v1.1.0</code> and confirm the fetched file matches it with
+    <code>git show v1.1.0:ADVERSARIAL_REVIEW.md | diff - ADVERSARIAL_REVIEW.md</code>.
+    That template includes the default reviewer–challenger loop. The command above
+    overwrites an existing <code>ADVERSARIAL_REVIEW.md</code> — back up your
+    Repo-specific rules first. Already on a pre-1.1.0 copy? See the
+    <a href="https://github.com/awdemos/adversarial-review#upgrade-an-existing-install">upgrade section</a>
+    of the README.</p>
     <p class="terminal-note">Coding agent? Install the
     <a href="https://github.com/awdemos/adversarial-review/tree/main/skill/adversarial-review"><code>adversarial-review</code> skill</a>
     into your agent's skills dir and say <code>run an adversarial review</code>.</p>
@@ -813,6 +895,46 @@
         review.</p>
       </li>
     </ul>
+  </section>
+
+  <!-- ===================== objections ===================== -->
+
+  <section class="section" id="faq">
+    <div class="section-head">
+      <span class="kicker">Common objections</span>
+      <h2>Fair questions, direct answers</h2>
+    </div>
+
+    <div class="faq">
+      <div>
+        <h3>Isn't this just a bigger prompt?</h3>
+        <p>No. It lives in the repo as a versioned file, so every session reads
+        the same rules, and the file itself is something humans and agents can
+        diff, review, and improve. The <a href="#why">full argument</a> is above.</p>
+      </div>
+      <div>
+        <h3>Does it work with my coding agent?</h3>
+        <p>Any agent that reads repo convention files can follow it — there is
+        no vendor-specific integration. Agents with a skills directory can
+        install the bundled <a href="https://github.com/awdemos/adversarial-review/tree/main/skill/adversarial-review">skill</a>
+        to run the protocol end to end.</p>
+      </div>
+      <div>
+        <h3>Won't three roles burn extra tokens?</h3>
+        <p>Yes: the literature puts adversarial review at roughly 4.5&times; a
+        zero-shot pass. That cost buys a fix for a measured failure mode —
+        critics agreeing with weak findings, and reviewers yielding to
+        confident but uncited rebuttals. The evidence and the
+        <a href="#research">counter-evidence</a> are both linked here.</p>
+      </div>
+      <div>
+        <h3>We already have AGENTS.md. Do we need this too?</h3>
+        <p>They do different jobs: <code>AGENTS.md</code> declares how to work;
+        this declares how to doubt the work. Keep both at the repo root, and
+        fill this file's <a href="https://github.com/awdemos/adversarial-review/blob/main/ADVERSARIAL_REVIEW.md">repo-specific section</a>
+        with your actual checks.</p>
+      </div>
+    </div>
   </section>
 
   <!-- ===================== the standard ===================== -->
@@ -973,6 +1095,10 @@
     <a href="https://github.com/awdemos/adversarial-review/blob/main/docs/review-2026-10-17.md">docs/review-2026-10-17.md</a>.
     <a href="https://github.com/awdemos/adversarial-review/blob/main/LICENSE">MIT License</a>.
     Feedback and PRs are welcome under the governance process above.</p>
+    <p class="prose research-note">Content freshness: this page can be ahead of
+    the signed v1.1.0 tag; post-tag site and guidance changes are listed in the
+    Unreleased section of
+    <a href="https://github.com/awdemos/adversarial-review/blob/main/CHANGELOG.md">CHANGELOG.md</a>.</p>
     <p class="prose research-note">Governance note: the operator authorized this
     release. The linked issue, PR review and NCO signoff comment required by
     <a href="https://github.com/awdemos/adversarial-review/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>
@@ -984,7 +1110,7 @@
 </main>
 
 <footer class="footer">
-  <span><span class="file">ADVERSARIAL_REVIEW.md</span> — an open standard proposal</span>
+  <span><span class="file">ADVERSARIAL_REVIEW.md</span> — an open, versioned standard</span>
   <nav aria-label="Footer">
     <a href="https://github.com/awdemos/adversarial-review/blob/main/LICENSE">MIT License</a>
     <a href="https://github.com/awdemos/adversarial-review/blob/main/CHANGELOG.md">CHANGELOG</a>

@@ -9,7 +9,7 @@ default reviewer–challenger loop with explicit reconciliation.
 - [ADVERSARIAL_REVIEW.md](./ADVERSARIAL_REVIEW.md) — the canonical template you copy into your repo
 - [CONTRIBUTING.md](./CONTRIBUTING.md) — governance: issues before PRs, verified (signed) commits, NCO signoff
 - [CHANGELOG.md](./CHANGELOG.md) — semver policy and release history
-- [docs/review-2026-10-17.md](./docs/review-2026-10-17.md) — the 347-agent adversarial review of v1.0.0 that shaped v1.0.1
+- [docs/review-2026-10-17.md](./docs/review-2026-10-17.md) — the 347-agent adversarial review of the initial release that shaped the standard
 - [docs/research-basis.md](./docs/research-basis.md) — annotated bibliography of arXiv sources behind the standard (also cited on the site)
 - [docs/v1.1-rationale.md](./docs/v1.1-rationale.md) — rationale for the **adopted** v1.1.0 default reviewer/challenger loop; governance signoff still pending
 
@@ -18,19 +18,28 @@ License: MIT (see [LICENSE](./LICENSE)).
 Quickstart:
 
 ```sh
-curl -O https://raw.githubusercontent.com/awdemos/adversarial-review/v1.1.0/ADVERSARIAL_REVIEW.md
+curl -fsSL -o ADVERSARIAL_REVIEW.md \
+  https://raw.githubusercontent.com/awdemos/adversarial-review/v1.1.0/ADVERSARIAL_REVIEW.md
+grep -m1 '^Version ' ADVERSARIAL_REVIEW.md   # expect: Version 1.1.0
 ```
 
-The quickstart pins to the signed `v1.1.0` tag — verify it with
-`git tag -v v1.1.0`. That template includes the default reviewer–challenger
-loop. Use the tag URL, not `main`: raw.githubusercontent.com caches branch
-content and can serve an older revision, while a published tag is immutable.
+This overwrites an existing `ADVERSARIAL_REVIEW.md`; back up your customized
+Repo-specific rules before running it.
+
+The quickstart pins to the signed `v1.1.0` tag. In a clone of
+`awdemos/adversarial-review`, verify the tag with `git tag -v v1.1.0` and confirm
+the fetched file matches it with
+`git show v1.1.0:ADVERSARIAL_REVIEW.md | diff - ADVERSARIAL_REVIEW.md`.
+That template includes the default reviewer–challenger loop. Use the tag URL,
+not `main`: raw.githubusercontent.com caches branch content and can serve an
+older revision, while a published tag is immutable. If your repo-local copy
+predates 1.1.0, see [Upgrade an existing install](#upgrade-an-existing-install).
 
 ## Upgrade an existing install
 
 A repo-local `ADVERSARIAL_REVIEW.md` overrides the installed skill. If your
-copy says `Version 1.0.1`, the skill keeps following that older contract — and
-v1.0.1 has no challenger rule, so the R→C loop never runs. Overwrite it:
+copy predates 1.1.0, the skill keeps following that older contract — which has
+no challenger rule, so the R→C loop never runs. Overwrite it:
 
 ```sh
 curl -fsSL -o ADVERSARIAL_REVIEW.md \
@@ -39,7 +48,7 @@ grep -m1 '^Version ' ADVERSARIAL_REVIEW.md   # expect: Version 1.1.0
 ```
 
 If your installed skill predates v1.1.0, re-copy it too (below). Clients that
-cache the file or the v1.0.1 URL must refresh their cached copy.
+cache the file or an older tag URL must refresh their cached copy.
 
 ## Install the skill
 

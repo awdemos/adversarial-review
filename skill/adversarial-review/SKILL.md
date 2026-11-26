@@ -26,9 +26,9 @@ review; agreement between agents is not evidence.
 1. **Repo rules win — if they are current.** If the repo root has
    `ADVERSARIAL_REVIEW.md`, read its `Version` line. At v1.1.0 or newer, follow
    IT exactly — its repo rules, extra lenses, required commands, and role
-   labels override this skill's defaults. At v1.0.1 or older, do **not** follow
-   it silently: tell the operator it lacks the challenger rule and give them
-   the upgrade command from the standard's README; use the bundled v1.1
+   labels override this skill's defaults. At any older version, do **not**
+   follow it silently: tell the operator it lacks the challenger rule and give
+   them the upgrade command from the standard's README; use the bundled v1.1
    protocol until the file is upgraded.
 2. **Otherwise use the bundled default protocol** in `default-protocol.md`
    (next to this file): the standard's v1.1.x protocol — one pass per lens,
